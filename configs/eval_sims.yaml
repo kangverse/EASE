@@ -1,0 +1,52 @@
+base:
+  seed: 1111
+  batch_size: 1
+  num_workers: 8
+  train_mode: regression # only support regression now
+  key_eval: MAE
+  missing_rate_eval_test: 0   # used for evaluation and testing
+
+loss:
+  uada:
+    sigma: 1.0               # kernel sigma
+    lambda: 1.0              # psi scaling
+  anchor:
+    sigma0: 0.1
+    beta: 1.0
+    ema: 0.99
+    bin_edges: [-0.1, 0.1]   # 3-bin
+
+dataset:
+  datasetName: sims
+  dataPath: ../dataset/MMSA/CH-SIMS/unaligned_39.pkl
+  
+
+model:    
+  feature_extractor:
+    bert_pretrained: '../prebert/bert-base-chinese'
+    input_length: [39, 55, 400] # language, video, audio
+    token_length: [8, 8, 8] # language, video, audio
+    heads: 8
+    input_dims: [768, 709, 33] # language, video, audio
+    hidden_dims: [128, 128, 128] # language, video, audio
+    depth: 2
+
+    
+  ucmi:
+    depth: 2
+    heads: 8
+    mlp_dim: 128
+    eps: 0.000001
+
+  gate:
+    depth: 2
+    heads: 8
+    mlp_dim: 128
+
+  fusion:
+    depth: 4
+    heads: 8
+    mlp_dim: 128
+
+  head:
+    out_dim: 1

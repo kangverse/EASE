@@ -1,0 +1,54 @@
+base:
+  seed: 1111
+  batch_size: 64
+  num_workers: 8
+  train_mode: regression # only support regression now
+  key_eval: Non0_acc_2 # Has0_acc_2
+  missing_rate_eval_test: 0   # used for evaluation and testing
+
+
+loss:
+  uada:
+    sigma: 1.0 
+    lambda: 1.0   
+  anchor:
+    sigma0: 0.1
+    beta: 1.0
+    ema: 0.99
+    bin_edges: [-0.1, 0.1]   # 3-bin
+
+dataset:
+  datasetName: mosei
+  dataPath: ../dataset/MMSA/MOSEI/unaligned_50.pkl
+   
+
+model:    
+  feature_extractor:
+    bert_pretrained: '..prebert/bert-base-uncased'
+    input_length: [50, 500, 500] # language, video, audio
+    token_length: [8, 8, 8] # language, video, audio
+    heads: 8
+    input_dims: [768, 35, 74] # language, video, audio
+    hidden_dims: [128, 128, 128] # language, video, audio
+    depth: 2
+
+    
+  ucmi:
+    depth: 2
+    heads: 8
+    mlp_dim: 128
+    eps: 0.000001
+
+  gate:
+    depth: 2
+    heads: 8
+    mlp_dim: 128
+
+  fusion:
+    depth: 4
+    heads: 8
+    mlp_dim: 128
+
+  head:
+    out_dim: 1
+

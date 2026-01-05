@@ -1,0 +1,72 @@
+base:
+  seed: 1111
+  lr: 0.00001
+  weight_decay: 0.0001
+  batch_size: 64
+  n_epochs: 200
+  num_workers: 8
+  alpha: 0.9
+  beta: 0.6
+  gamma: 0.1
+  sigma: 1.0
+  lambda_ucmi: 0.5          # 3.2
+  lambda_uada: 0.2           # 3.3
+  lambda_anchor: 0.005        # 3.4
+  train_mode: regression  # only support regression now
+  missing_rate_eval_test: 0.5   # used for evaluation and testing
+  do_validation: true
+
+loss:
+  uada:
+    sigma: 1.0              
+    lambda: 1.0             
+  anchor:
+    sigma0: 0.1
+    beta: 1.0
+    ema: 0.99
+    bin_edges: [-0.1, 0.1]   # 3-bin
+  
+  cmdc:
+    num_views: 3
+    drop_prob: 0.5
+    use_hallucinated_when_drop: false   # 推荐先 false，更“缺失鲁棒”
+    lambda_cons: 2
+    lambda_asym: 2
+    temperature: 2.0  
+
+
+dataset:
+  datasetName: sims
+  dataPath: ../dataset/MMSA/CH-SIMS/unaligned_39.pkl
+   
+
+model:    
+  feature_extractor:
+    bert_pretrained: '../prebert/bert-base-chinese'
+    input_length: [39, 55, 400] # language, video, audio
+    token_length: [8, 8, 8] # language, video, audio
+    heads: 8
+    input_dims: [768, 709, 33] # language, video, audio
+    hidden_dims: [128, 128, 128] # language, video, audio
+    depth: 2
+  
+
+  ucmi:
+    depth: 2
+    heads: 8
+    mlp_dim: 128
+    eps: 0.000001
+
+  gate:
+    depth: 2
+    heads: 8
+    mlp_dim: 128
+
+  fusion:
+    depth: 4
+    heads: 8
+    mlp_dim: 128
+
+  head:
+    out_dim: 1
+
