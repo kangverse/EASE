@@ -6,7 +6,7 @@ Building on this, we introduce an uncertainty-adaptive elastic kernel in the Rep
 Finally, we bridge the disconnect at the decision level by imposing consistency constraints between partial and full views, ensuring robust discrimination under varying missingness patterns.
 
 <p align="center">
-  <img src="img/model.png" width="600"><br>
+  <img src="img/model.png" width="800"><br>
   <em>Figure 1: Overall architecture of the proposed framework EASE.</em>
 </p>
 
@@ -66,3 +66,6 @@ CUDA_VISIBLE_DEVICES=0 python robust_evaluation.py --save_path robust_results/EA
 
 
 ```
+
+### Acknowledge
+Part of our code is based on [LNLN](https://github.com/Haoyu-ha/LNLN).

@@ -250,7 +250,6 @@ class EASELoss(nn.Module):
         ec = out['ucmi']
         cf = out['complete_feats']
 
-        # complete feats
         z_l_tok = cf['l'].to(device)  # [B, T, D]
         z_a_tok = cf['a'].to(device)
         z_v_tok = cf['v'].to(device)

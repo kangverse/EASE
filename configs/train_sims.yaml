@@ -29,7 +29,7 @@ loss:
   cmdc:
     num_views: 3
     drop_prob: 0.5
-    use_hallucinated_when_drop: false   # 推荐先 false，更“缺失鲁棒”
+    use_hallucinated_when_drop: false   
     lambda_cons: 2
     lambda_asym: 2
     temperature: 2.0  

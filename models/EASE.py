@@ -95,7 +95,7 @@ class UCMIModule(nn.Module):
           u_token: [B, out_tokens]  (per-token uncertainty)
           u: [B, 1]                 (sample-level uncertainty)
         """
-        h = self.backbone(z_src)[:, :out_tokens]          # 取前 out_tokens 作为 shared tokens
+        h = self.backbone(z_src)[:, :out_tokens]          
         mu, sigma2 = self.dual_head(h)                    # [B, T, D]
         if sample:
             eps = torch.randn_like(mu)
@@ -108,13 +108,7 @@ class UCMIModule(nn.Module):
         return mu, sigma2, z_hat, u_token, u
 
 
-# -------------------------
-# Utility: modality completeness gates
-# -------------------------
 class CompletenessEstimator(nn.Module):
-    """
-    从 token 序列预测一个 gate w in (0,1)，表示“当前模态可靠/完整程度”
-    """
     def __init__(self, dim=128, depth=2, heads=8, mlp_dim=128, token_len=8):
         super().__init__()
         self.encoder = Transformer(
@@ -170,7 +164,6 @@ class EASE(nn.Module):
             pretrained=fe['bert_pretrained']
         )
 
-        # modality encoders: project to 128 + transformer tokens
         self.proj_l = nn.Sequential(
             nn.Linear(fe['input_dims'][0], fe['hidden_dims'][0]),
             Transformer(
@@ -275,7 +268,6 @@ class EASE(nn.Module):
             return keep * h_obs
     
     def sample_keep_mask(self, B, device, drop_prob):
-        # keep: [B,3]
         keep = (torch.rand(B, 3, device=device) > drop_prob).float()
 
         all_drop = (keep.sum(dim=1) < 0.5)  # [B]
@@ -304,7 +296,6 @@ class EASE(nn.Module):
 
         B = vision_m.size(0)
 
-        # -------- encode incomplete inputs -> tokens --------
         h_l = self.proj_l(self.bertmodel(language_m))[:, :8]  # [B,8,128]
         h_a = self.proj_a(audio_m)[:, :8]                     # [B,8,128]
         h_v = self.proj_v(vision_m)[:, :8]                    # [B,8,128]
@@ -331,7 +322,6 @@ class EASE(nn.Module):
         w_a = self.gate_a(h_a) * (1.0 - miss_a) 
         w_v = self.gate_v(h_v) * (1.0 - miss_v) 
         
-        # fuse token-wise: h_fused = w*observed + (1-w)*hallucinated
         h_l_f = h_l * w_l.unsqueeze(-1) + zhat_t * (1.0 - w_l.unsqueeze(-1))
         h_a_f = h_a * w_a.unsqueeze(-1) + zhat_a * (1.0 - w_a.unsqueeze(-1))
         h_v_f = h_v * w_v.unsqueeze(-1) + zhat_v * (1.0 - w_v.unsqueeze(-1))
@@ -382,7 +372,6 @@ class EASE(nn.Module):
             }
 
 
-        # -------- provide complete features
         complete_feats = None
         if (vision is not None) and (audio is not None) and (language is not None):
             cl = self.proj_l(self.bertmodel(language))[:, :8]
