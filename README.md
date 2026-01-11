@@ -5,6 +5,11 @@ We reformulate feature imputation as a probabilistic conditional density estimat
 Building on this, we introduce an uncertainty-adaptive elastic kernel in the Reproducing Kernel Hilbert Space (RKHS), which leverages the estimated confidence to modulate alignment strength and mitigate noise overfitting. 
 Finally, we bridge the disconnect at the decision level by imposing consistency constraints between partial and full views, ensuring robust discrimination under varying missingness patterns.
 
+<p align="center">
+  <img src="img/model.png" width="600"><br>
+  <em>Figure 1: Overall architecture of the proposed framework EASE.</em>
+</p>
+
 
 
 ## Usage
